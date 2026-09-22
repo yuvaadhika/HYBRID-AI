@@ -16,7 +16,6 @@ import {
   Map,
   ShieldAlert,
   Radio,
-  CheckCircle2,
   ChevronDown
 } from 'lucide-react';
 import { WeatherRegime, LocationOption } from '../types/weather';
@@ -46,32 +45,32 @@ const REGIME_META: Record<
 > = {
   NORMAL: {
     label: 'Normal Regime',
-    icon: <Sun className="w-4 h-4 text-amber-400" />,
-    badgeClass: 'bg-amber-500/15 text-amber-300 border-amber-500/40',
+    icon: <Sun className="w-3.5 h-3.5 text-amber-300" />,
+    badgeClass: 'bg-amber-500/10 text-amber-200 border-amber-500/20',
     desc: 'Quiescent synoptic conditions'
   },
   CONVECTIVE: {
     label: 'Convective Storm',
-    icon: <CloudLightning className="w-4 h-4 text-purple-400" />,
-    badgeClass: 'bg-purple-500/15 text-purple-300 border-purple-500/40',
+    icon: <CloudLightning className="w-3.5 h-3.5 text-purple-300" />,
+    badgeClass: 'bg-purple-500/10 text-purple-200 border-purple-500/20',
     desc: 'Localized updrafts & lightning'
   },
   MONSOON: {
     label: 'Monsoon Depr.',
-    icon: <CloudRain className="w-4 h-4 text-sky-400" />,
-    badgeClass: 'bg-sky-500/15 text-sky-300 border-sky-500/40',
+    icon: <CloudRain className="w-3.5 h-3.5 text-sky-300" />,
+    badgeClass: 'bg-sky-500/10 text-sky-200 border-sky-500/20',
     desc: 'Widespread orographic precipitation'
   },
   HEAVY_RAIN: {
     label: 'Heavy Rain Band',
-    icon: <CloudRain className="w-4 h-4 text-blue-400" />,
-    badgeClass: 'bg-blue-500/20 text-blue-300 border-blue-500/50 shadow-[0_0_15px_rgba(59,130,246,0.3)]',
+    icon: <CloudRain className="w-3.5 h-3.5 text-blue-300" />,
+    badgeClass: 'bg-blue-500/15 text-blue-200 border-blue-500/30',
     desc: 'Intense mesoscale rain bands'
   },
   EXTREME: {
     label: 'Extreme Cyclonic',
-    icon: <AlertTriangle className="w-4 h-4 text-rose-400" />,
-    badgeClass: 'bg-rose-500/20 text-rose-300 border-rose-500/50 animate-pulse shadow-[0_0_20px_rgba(244,63,94,0.4)]',
+    icon: <AlertTriangle className="w-3.5 h-3.5 text-rose-300" />,
+    badgeClass: 'bg-rose-500/15 text-rose-200 border-rose-500/30',
     desc: 'High-impact cyclonic squall event'
   }
 };
@@ -88,8 +87,7 @@ export const CommandHeader: React.FC<CommandHeaderProps> = ({
   isLoadingLive,
   onRefreshLive,
   lastUpdated,
-  onUseGPS,
-  isLiveMode
+  onUseGPS
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<GeocodingResult[]>([]);
@@ -98,7 +96,6 @@ export const CommandHeader: React.FC<CommandHeaderProps> = ({
   const [showRegimeMenu, setShowRegimeMenu] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
 
-  // Debounced live city search
   useEffect(() => {
     if (!searchQuery || searchQuery.trim().length < 2) {
       setSearchResults([]);
@@ -117,7 +114,6 @@ export const CommandHeader: React.FC<CommandHeaderProps> = ({
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
-  // Close search dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
@@ -140,37 +136,31 @@ export const CommandHeader: React.FC<CommandHeaderProps> = ({
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-[#040813]/95 backdrop-blur-2xl border-b border-sky-500/20 shadow-[0_4px_30px_rgba(0,0,0,0.8)]">
+    <header className="sticky top-0 z-50 w-full bg-[#0e1424]/90 backdrop-blur-xl border-b border-slate-800 shadow-sm">
       {/* Top Banner: Status & Search */}
       <div className="max-w-7xl mx-auto px-4 lg:px-8 py-3">
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-4">
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-3">
           
-          {/* Logo & Live Stream Status */}
+          {/* Logo & Live Status */}
           <div className="flex items-center justify-between w-full lg:w-auto gap-4">
             <div className="flex items-center gap-3">
-              <div className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-600 via-cyan-500 to-blue-700 p-0.5 shadow-[0_0_25px_rgba(56,189,248,0.5)]">
-                <div className="w-full h-full rounded-[10px] bg-[#060b18] flex items-center justify-center">
-                  <Activity className="w-5 h-5 text-sky-400 animate-pulse" />
-                </div>
-                <span className="absolute -top-1 -right-1 flex h-3 w-3">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
-                </span>
+              <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-slate-800 border border-slate-700/60 shadow-sm">
+                <Activity className="w-4 h-4 text-sky-400" />
               </div>
 
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="text-xl font-black tracking-tight text-white font-['Outfit']">
-                    HYBRID<span className="text-sky-400">CAST</span> <span className="text-cyan-400">AI</span>
+                  <span className="text-lg font-bold tracking-tight text-white font-['Outfit']">
+                    HYBRID<span className="text-sky-400">CAST</span> <span className="text-slate-400 font-medium">AI</span>
                   </span>
-                  <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-sky-500/20 text-sky-300 border border-sky-400/30">
-                    OPERATIONAL V2.4
+                  <span className="text-[9px] font-mono font-semibold px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">
+                    ADAPTIVE V2.4
                   </span>
                 </div>
-                <div className="flex items-center gap-2 text-xs text-slate-400 mt-0.5">
-                  <span className="inline-flex items-center gap-1 text-emerald-400 font-mono font-semibold text-[11px]">
-                    <Radio className="w-3 h-3 animate-spin" style={{ animationDuration: '4s' }} />
-                    LIVE OPEN-METEO & NWP STREAM
+                <div className="flex items-center gap-2 text-[11px] text-slate-400 mt-0.5">
+                  <span className="inline-flex items-center gap-1 text-emerald-400/90 font-medium">
+                    <Radio className="w-2.5 h-2.5" />
+                    Live Data Stream
                   </span>
                   <span>•</span>
                   <span>Synced {lastUpdated}</span>
@@ -183,10 +173,10 @@ export const CommandHeader: React.FC<CommandHeaderProps> = ({
               <button
                 onClick={onRefreshLive}
                 disabled={isLoadingLive}
-                className="p-2 rounded-xl bg-slate-800 border border-white/10 text-sky-400 hover:text-white"
+                className="p-2 rounded-xl bg-slate-800/80 border border-slate-700 text-slate-300 hover:text-white"
                 title="Refresh Live Data"
               >
-                <RefreshCw className={`w-4 h-4 ${isLoadingLive ? 'animate-spin' : ''}`} />
+                <RefreshCw className={`w-3.5 h-3.5 ${isLoadingLive ? 'animate-spin' : ''}`} />
               </button>
             </div>
           </div>
@@ -194,29 +184,29 @@ export const CommandHeader: React.FC<CommandHeaderProps> = ({
           {/* Search Any City & GPS Controls */}
           <div className="flex items-center gap-2 w-full lg:w-auto">
             {/* Live Search Bar */}
-            <div ref={searchRef} className="relative flex-1 lg:w-80">
+            <div ref={searchRef} className="relative flex-1 lg:w-72">
               <div className="relative flex items-center">
-                <Search className="absolute left-3 w-4 h-4 text-sky-400" />
+                <Search className="absolute left-3 w-3.5 h-3.5 text-slate-400" />
                 <input
                   type="text"
-                  placeholder="Search any city (e.g. Chennai, Delhi, London)..."
+                  placeholder="Search city (e.g. Chennai, Delhi)..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onFocus={() => {
                     if (searchResults.length > 0) setShowSearchDropdown(true);
                   }}
-                  className="w-full pl-9 pr-8 py-2 rounded-xl bg-slate-900/90 border border-sky-500/30 text-xs text-white placeholder-slate-400 focus:outline-none focus:border-sky-400 focus:ring-2 focus:ring-sky-500/20 transition-all shadow-inner"
+                  className="w-full pl-8 pr-8 py-1.5 rounded-xl bg-slate-900/90 border border-slate-700/80 text-xs text-slate-200 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500/30 transition-all"
                 />
                 {isSearching && (
-                  <RefreshCw className="absolute right-3 w-3.5 h-3.5 text-sky-400 animate-spin" />
+                  <RefreshCw className="absolute right-3 w-3 h-3 text-slate-400 animate-spin" />
                 )}
               </div>
 
-              {/* Autocomplete Dropdown */}
+              {/* Dropdown */}
               {showSearchDropdown && searchResults.length > 0 && (
-                <div className="absolute left-0 right-0 mt-2 rounded-2xl bg-[#0b1329] border border-sky-500/30 shadow-2xl p-1.5 z-50 max-h-72 overflow-y-auto backdrop-blur-xl">
-                  <div className="px-2.5 py-1.5 text-[10px] font-mono font-bold text-sky-400 uppercase tracking-wider border-b border-white/10">
-                    Live Geocoding Stations
+                <div className="absolute left-0 right-0 mt-2 rounded-2xl bg-[#131b2e] border border-slate-700 shadow-xl p-1.5 z-50 max-h-64 overflow-y-auto">
+                  <div className="px-2.5 py-1 text-[10px] font-mono font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-800">
+                    Stations
                   </div>
                   <div className="mt-1 space-y-0.5">
                     {searchResults.map((city) => (
@@ -231,24 +221,24 @@ export const CommandHeader: React.FC<CommandHeaderProps> = ({
                             lon: city.longitude,
                             defaultRegime: 'NORMAL',
                             elevation: city.elevation ? `${city.elevation}m` : 'Sea Level',
-                            climateZone: 'Real-Time Dynamic Coordinates'
+                            climateZone: 'Real-Time Coordinates'
                           });
                           setSearchQuery('');
                           setShowSearchDropdown(false);
                         }}
-                        className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-left text-xs hover:bg-sky-500/20 transition-all text-slate-200 group"
+                        className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-xl text-left text-xs hover:bg-slate-800 transition-all text-slate-200"
                       >
                         <div className="flex items-center gap-2">
-                          <MapPin className="w-3.5 h-3.5 text-sky-400 group-hover:scale-110 transition-transform" />
+                          <MapPin className="w-3.5 h-3.5 text-sky-400" />
                           <div>
-                            <span className="font-bold text-white">{city.name}</span>
+                            <span className="font-semibold text-white">{city.name}</span>
                             <span className="text-[11px] text-slate-400 ml-1.5">
                               {city.admin1 ? `${city.admin1}, ` : ''}{city.country}
                             </span>
                           </div>
                         </div>
                         <span className="text-[10px] font-mono text-slate-400">
-                          {city.latitude.toFixed(2)}°, {city.longitude.toFixed(2)}°
+                          {city.latitude.toFixed(1)}°, {city.longitude.toFixed(1)}°
                         </span>
                       </button>
                     ))}
@@ -257,70 +247,69 @@ export const CommandHeader: React.FC<CommandHeaderProps> = ({
               )}
             </div>
 
-            {/* GPS Location Button */}
+            {/* GPS Button */}
             <button
               onClick={onUseGPS}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-900/90 hover:bg-sky-950/60 border border-sky-500/30 text-xs font-semibold text-sky-300 hover:text-white transition-all shadow-sm shrink-0"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 text-xs font-medium text-slate-300 hover:text-white transition-all shrink-0"
               title="Detect Live GPS Weather"
             >
-              <MapPin className="w-4 h-4 text-sky-400" />
+              <MapPin className="w-3.5 h-3.5 text-sky-400" />
               <span className="hidden sm:inline">My GPS</span>
             </button>
 
-            {/* Live Refresh Button */}
+            {/* Sync Button */}
             <button
               onClick={onRefreshLive}
               disabled={isLoadingLive}
-              className="hidden lg:flex items-center gap-1.5 px-3 py-2 rounded-xl bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-xs font-bold text-white transition-all shadow-lg shadow-sky-600/30 shrink-0"
+              className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-semibold text-sky-300 hover:text-white transition-all shrink-0"
             >
-              <RefreshCw className={`w-3.5 h-3.5 ${isLoadingLive ? 'animate-spin' : ''}`} />
-              <span>{isLoadingLive ? 'Syncing...' : 'Sync Live'}</span>
+              <RefreshCw className={`w-3 h-3 ${isLoadingLive ? 'animate-spin' : ''}`} />
+              <span>{isLoadingLive ? 'Syncing...' : 'Sync'}</span>
             </button>
           </div>
 
-          {/* Regime Controller & Station Display */}
-          <div className="flex items-center gap-3 w-full lg:w-auto justify-between lg:justify-end">
-            {/* Active Station Display */}
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900/90 border border-white/10">
-              <Globe className="w-4 h-4 text-sky-400" />
+          {/* Location & Regime Controller */}
+          <div className="flex items-center gap-2 w-full lg:w-auto justify-between lg:justify-end">
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900/80 border border-slate-800">
+              <Globe className="w-3.5 h-3.5 text-sky-400" />
               <div className="text-left">
-                <div className="text-xs font-bold text-white truncate max-w-[120px] sm:max-w-[160px]">
+                <div className="text-xs font-semibold text-white truncate max-w-[110px] sm:max-w-[150px]">
                   {currentLocation.name}
                 </div>
                 <div className="text-[10px] text-slate-400">{currentLocation.state}</div>
               </div>
             </div>
 
-            {/* Regime Badge & Switcher */}
+            {/* Regime Switcher */}
             <div className="relative">
               <button
                 onClick={() => setShowRegimeMenu(!showRegimeMenu)}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-bold border transition-all ${regimeInfo.badgeClass}`}
+                className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-semibold border transition-all ${regimeInfo.badgeClass}`}
               >
                 {regimeInfo.icon}
-                <span>{regimeInfo.label}</span>
+                <span>{regimeInfo.label.split(' ')[0]}</span>
                 {isAutoRegime && (
-                  <span className="text-[9px] font-mono px-1 py-0.2 bg-sky-400/20 text-sky-200 rounded font-bold">
+                  <span className="text-[9px] font-mono px-1 py-0.2 bg-slate-800 text-slate-300 rounded">
                     AUTO
                   </span>
                 )}
-                <ChevronDown className="w-3.5 h-3.5 opacity-70" />
+                <ChevronDown className="w-3 h-3 opacity-60" />
               </button>
 
               {showRegimeMenu && (
-                <div className="absolute right-0 mt-2 w-72 rounded-2xl bg-[#0b1329] border border-sky-500/30 shadow-2xl p-2 z-50 backdrop-blur-xl">
-                  <div className="flex items-center justify-between px-2 py-1.5 border-b border-white/10 text-xs font-bold text-slate-300">
-                    <span>Weather Regime Classifier</span>
+                <div className="absolute right-0 mt-2 w-64 rounded-2xl bg-[#131b2e] border border-slate-700 shadow-xl p-2 z-50">
+                  <div className="flex items-center justify-between px-2 py-1 border-b border-slate-800 text-xs font-semibold text-slate-300">
+                    <span>Regime Mode</span>
                     <button
                       onClick={onToggleAutoRegime}
-                      className={`text-[10px] font-mono px-2 py-0.5 rounded font-bold transition-all ${
+                      className={`text-[9px] font-mono px-2 py-0.5 rounded font-semibold transition-all ${
                         isAutoRegime ? 'bg-emerald-500/20 text-emerald-300' : 'bg-slate-800 text-slate-400'
                       }`}
                     >
-                      {isAutoRegime ? 'AUTO (Active)' : 'MANUAL'}
+                      {isAutoRegime ? 'AUTO' : 'MANUAL'}
                     </button>
                   </div>
-                  <div className="mt-1.5 space-y-1">
+                  <div className="mt-1 space-y-0.5">
                     {(Object.keys(REGIME_META) as WeatherRegime[]).map((key) => {
                       const item = REGIME_META[key];
                       const isSelected = key === currentRegime;
@@ -331,15 +320,15 @@ export const CommandHeader: React.FC<CommandHeaderProps> = ({
                             onSelectRegime(key);
                             setShowRegimeMenu(false);
                           }}
-                          className={`w-full flex items-start gap-2.5 p-2 rounded-xl text-left transition-all ${
-                            isSelected ? 'bg-sky-500/20 border border-sky-500/40 text-white' : 'hover:bg-white/5 text-slate-300'
+                          className={`w-full flex items-start gap-2 p-2 rounded-xl text-left transition-all ${
+                            isSelected ? 'bg-slate-800 border border-slate-700 text-white' : 'hover:bg-slate-800/60 text-slate-300'
                           }`}
                         >
                           <div className="mt-0.5">{item.icon}</div>
                           <div className="flex-1">
-                            <div className="text-xs font-bold text-white flex items-center justify-between">
+                            <div className="text-xs font-semibold text-white flex items-center justify-between">
                               {item.label}
-                              {isSelected && <span className="text-[10px] font-mono text-sky-400 font-bold">ACTIVE</span>}
+                              {isSelected && <span className="text-[9px] font-mono text-sky-400">ACTIVE</span>}
                             </div>
                             <div className="text-[10px] text-slate-400">{item.desc}</div>
                           </div>
@@ -354,21 +343,19 @@ export const CommandHeader: React.FC<CommandHeaderProps> = ({
         </div>
       </div>
 
-      {/* Main Navigation Bar */}
-      <div className="bg-[#030712]/90 border-t border-white/5 px-4 lg:px-8">
-        <div className="max-w-7xl mx-auto flex items-center justify-start sm:justify-center overflow-x-auto no-scrollbar gap-2 py-1.5">
+      {/* Navigation Tabs */}
+      <div className="bg-[#0a0f1d] border-t border-slate-800/80 px-4 lg:px-8">
+        <div className="max-w-7xl mx-auto flex items-center justify-start sm:justify-center overflow-x-auto no-scrollbar gap-1 py-1.5">
           {navTabs.map((tab) => {
             const isActive = activeView === tab.id;
             return (
               <button
                 key={tab.id}
                 onClick={() => onSelectView(tab.id)}
-                className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all whitespace-nowrap ${
                   isActive
-                    ? tab.isHero
-                      ? 'bg-gradient-to-r from-sky-500 to-cyan-500 text-slate-950 shadow-lg shadow-sky-500/30'
-                      : 'bg-sky-500/20 text-sky-300 border border-sky-400/40 shadow-sm'
-                    : 'text-slate-400 hover:text-slate-100 hover:bg-white/5'
+                    ? 'bg-slate-800 text-sky-300 border border-slate-700 font-semibold'
+                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/40'
                 }`}
               >
                 {tab.icon}

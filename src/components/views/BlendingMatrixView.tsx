@@ -3,12 +3,7 @@ import {
   Sliders,
   Cpu,
   Sparkles,
-  Layers,
-  RotateCcw,
-  Zap,
-  Activity,
-  CheckCircle2,
-  HelpCircle
+  RotateCcw
 } from 'lucide-react';
 import { ForecastSnapshot, LeadTime, WeatherRegime, ForecastModelId } from '../../types/weather';
 import { calculateAdaptiveWeights } from '../../services/blendingEngine';
@@ -26,7 +21,6 @@ export const BlendingMatrixView: React.FC<BlendingMatrixViewProps> = ({
 }) => {
   const { location, leadTime, regime } = snapshot;
 
-  // Sandbox State
   const [sandboxLeadTime, setSandboxLeadTime] = useState<LeadTime>(leadTime);
   const [sandboxRegime, setSandboxRegime] = useState<WeatherRegime>(regime);
   const [customRawRain, setCustomRawRain] = useState<Record<ForecastModelId, number>>({
@@ -59,94 +53,91 @@ export const BlendingMatrixView: React.FC<BlendingMatrixViewProps> = ({
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-300">
+    <div className="space-y-5 animate-in fade-in duration-300">
       
       {/* Title */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <div>
-          <div className="flex items-center gap-2 text-xs font-mono font-bold text-sky-400 uppercase tracking-wider">
-            <Cpu className="w-4 h-4" />
-            <span>AI–NWP Multi-Model Blending Engine</span>
+          <div className="text-xs font-mono text-slate-400 uppercase">
+            Blending Engine
           </div>
-          <h2 className="text-3xl font-black text-white font-['Outfit'] tracking-tight">
-            Dynamic Ensemble Weighting & Sandbox
+          <h2 className="text-2xl font-bold text-white font-['Outfit']">
+            Dynamic Model Weighting & Sandbox
           </h2>
           <p className="text-xs text-slate-400 mt-0.5">
-            Real-time adaptive weight optimization parameterized by Lead Time (L), Regime (R) and Regional Skill (S)
+            Adaptive weight distribution based on Lead Time, Regime, and Regional Historical Skill
           </p>
         </div>
 
         <button
           onClick={handleResetSandbox}
-          className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-mono font-bold text-slate-200 border border-white/10 transition-all shadow-sm"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-mono text-slate-300 border border-slate-700 transition-all"
         >
           <RotateCcw className="w-3.5 h-3.5" />
-          Reset Parameters
+          Reset Sandbox
         </button>
       </div>
 
-      {/* Hero Blended Outcome Card with Live Equation */}
-      <div className="rounded-3xl p-6 bg-gradient-to-br from-[#0c1a36]/95 via-[#081228]/95 to-[#040813]/98 border border-sky-400/40 shadow-2xl relative overflow-hidden">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+      {/* Hero Blended Outcome Card */}
+      <div className="rounded-2xl p-5 mild-card">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-center">
           
           <div className="lg:col-span-6 space-y-2">
             <div className="flex items-center gap-2">
-              <span className="text-xs font-mono font-bold px-3 py-1 rounded-full bg-sky-500/20 text-sky-300 border border-sky-400/30 uppercase">
-                Optimized Blended Forecast Target
+              <span className="text-xs font-mono px-2.5 py-0.5 rounded-md bg-slate-800 text-slate-300 border border-slate-700 uppercase">
+                Blended Target
               </span>
-              <span className="text-xs font-mono font-bold text-emerald-400">
+              <span className="text-xs font-mono font-medium text-emerald-400">
                 Confidence: {liveCalc.confidenceScore}%
               </span>
             </div>
 
-            <div className="flex items-baseline gap-3 pt-2">
-              <span className="text-6xl font-black text-white font-['Outfit']">
+            <div className="flex items-baseline gap-2 pt-1">
+              <span className="text-5xl font-black text-white font-['Outfit']">
                 {liveCalc.blendedRainfall}
               </span>
-              <span className="text-2xl font-bold text-sky-400">mm / {sandboxLeadTime}</span>
+              <span className="text-xl font-medium text-slate-400">mm / {sandboxLeadTime}</span>
             </div>
 
-            <p className="text-xs text-slate-300">
-              Station: <strong className="text-white">{location.name}</strong> • Regime: <strong className="text-sky-300">{sandboxRegime}</strong>
+            <p className="text-xs text-slate-400">
+              Station: <span className="text-slate-200 font-medium">{location.name}</span> • Regime: <span className="text-slate-200 font-medium">{sandboxRegime}</span>
             </p>
           </div>
 
-          <div className="lg:col-span-6 p-4 rounded-2xl bg-slate-950/80 border border-white/10 space-y-2">
-            <div className="text-[11px] font-mono text-slate-400 uppercase font-bold">
-              Dynamic Blending Mathematical Derivation
+          <div className="lg:col-span-6 p-3.5 rounded-xl bg-slate-900/60 border border-slate-800 space-y-1.5">
+            <div className="text-[10px] font-mono text-slate-400 uppercase font-semibold">
+              Blending Formula
             </div>
-            <div className="font-mono text-xs text-sky-300 bg-slate-900/90 p-3 rounded-xl border border-sky-500/20 break-all leading-relaxed">
-              F<sub className="text-[10px]">AI</sub> = ({liveCalc.weights.WRF}% × WRF) + ({liveCalc.weights.AI_MODEL}% × AI) + ({liveCalc.weights.GFS}% × GFS) + ({liveCalc.weights.ENSEMBLE}% × ENS)
+            <div className="font-mono text-xs text-slate-200 bg-slate-950/60 p-2.5 rounded-lg border border-slate-800 break-all leading-relaxed">
+              F<sub className="text-[9px]">AI</sub> = ({liveCalc.weights.WRF}% × WRF) + ({liveCalc.weights.AI_MODEL}% × AI) + ({liveCalc.weights.GFS}% × GFS) + ({liveCalc.weights.ENSEMBLE}% × ENS)
             </div>
-            <div className="flex items-center justify-between text-xs text-slate-400 pt-1 font-mono">
-              <span>Model Agreement: <strong className="text-emerald-300">{liveCalc.agreementLevel}</strong></span>
-              <span>Variance: <strong className="text-sky-300">σ = {liveCalc.variance}</strong></span>
+            <div className="flex items-center justify-between text-xs text-slate-400 font-mono pt-0.5">
+              <span>Agreement: <span className="text-slate-200 font-medium">{liveCalc.agreementLevel}</span></span>
+              <span>Variance: <span className="text-slate-200 font-medium">σ = {liveCalc.variance}</span></span>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Interactive What-If Simulation Sandbox Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      {/* Sandbox Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
         
         {/* Left: What-If Controls (6 Cols) */}
-        <div className="lg:col-span-6 rounded-3xl p-6 bg-[#0c1427]/95 border border-purple-500/30 shadow-2xl space-y-5">
-          <div className="flex items-center gap-2 text-purple-400">
-            <Sliders className="w-5 h-5" />
-            <h3 className="text-base font-bold text-white uppercase tracking-wider">
-              Interactive What-If Simulation
+        <div className="lg:col-span-6 rounded-2xl p-5 mild-card space-y-4">
+          <div className="flex items-center gap-2 text-slate-300">
+            <Sliders className="w-4 h-4 text-sky-400" />
+            <h3 className="text-sm font-semibold text-white">
+              What-If Simulation Sandbox
             </h3>
           </div>
 
-          {/* Lead-Time Slider */}
+          {/* Lead Time */}
           <div>
-            <div className="flex items-center justify-between text-xs mb-2">
-              <span className="text-slate-200 font-bold">Forecast Horizon (Lead-Time)</span>
-              <span className="font-mono font-bold text-sky-400 px-2 py-0.5 rounded bg-sky-500/20">
-                {sandboxLeadTime}
-              </span>
+            <div className="flex items-center justify-between text-xs mb-1.5">
+              <span className="text-slate-300">Lead Time Horizon</span>
+              <span className="font-mono font-semibold text-sky-400">{sandboxLeadTime}</span>
             </div>
-            <div className="grid grid-cols-5 gap-1.5">
+            <div className="grid grid-cols-5 gap-1">
               {(['6h', '12h', '24h', '48h', '72h'] as LeadTime[]).map((lt) => (
                 <button
                   key={lt}
@@ -154,10 +145,10 @@ export const BlendingMatrixView: React.FC<BlendingMatrixViewProps> = ({
                     setSandboxLeadTime(lt);
                     onLeadTimeChange(lt);
                   }}
-                  className={`py-2 rounded-xl text-xs font-mono font-bold transition-all ${
+                  className={`py-1.5 rounded-lg text-xs font-mono font-medium transition-all ${
                     sandboxLeadTime === lt
-                      ? 'bg-sky-500 text-white shadow-lg shadow-sky-500/40'
-                      : 'bg-slate-900 text-slate-400 hover:text-white border border-white/5'
+                      ? 'bg-slate-700 text-white font-semibold'
+                      : 'bg-slate-900/60 text-slate-400 hover:text-white border border-slate-800'
                   }`}
                 >
                   {lt}
@@ -166,15 +157,13 @@ export const BlendingMatrixView: React.FC<BlendingMatrixViewProps> = ({
             </div>
           </div>
 
-          {/* Regime Switcher */}
+          {/* Regime */}
           <div>
-            <div className="flex items-center justify-between text-xs mb-2">
-              <span className="text-slate-200 font-bold">Atmospheric Weather Regime</span>
-              <span className="font-mono font-bold text-purple-400 px-2 py-0.5 rounded bg-purple-500/20">
-                {sandboxRegime}
-              </span>
+            <div className="flex items-center justify-between text-xs mb-1.5">
+              <span className="text-slate-300">Weather Regime</span>
+              <span className="font-mono font-semibold text-purple-400">{sandboxRegime}</span>
             </div>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-3 gap-1.5">
               {(['NORMAL', 'CONVECTIVE', 'MONSOON', 'HEAVY_RAIN', 'EXTREME'] as WeatherRegime[]).map((r) => (
                 <button
                   key={r}
@@ -182,10 +171,10 @@ export const BlendingMatrixView: React.FC<BlendingMatrixViewProps> = ({
                     setSandboxRegime(r);
                     onRegimeChange(r);
                   }}
-                  className={`py-2 px-2 rounded-xl text-xs font-bold truncate transition-all ${
+                  className={`py-1.5 px-1 rounded-lg text-xs font-medium truncate transition-all ${
                     sandboxRegime === r
-                      ? 'bg-purple-600 text-white shadow-lg shadow-purple-600/40'
-                      : 'bg-slate-900 text-slate-400 hover:text-white border border-white/5'
+                      ? 'bg-slate-700 text-white font-semibold'
+                      : 'bg-slate-900/60 text-slate-400 hover:text-white border border-slate-800'
                   }`}
                 >
                   {r.replace('_', ' ')}
@@ -194,10 +183,10 @@ export const BlendingMatrixView: React.FC<BlendingMatrixViewProps> = ({
             </div>
           </div>
 
-          {/* Model Raw Input Sliders */}
-          <div className="space-y-3 pt-3 border-t border-white/10">
-            <div className="text-xs font-bold text-slate-200 uppercase">
-              Simulate Raw Forecast Inputs (mm)
+          {/* Raw Sliders */}
+          <div className="space-y-2.5 pt-2 border-t border-slate-800">
+            <div className="text-xs font-medium text-slate-300">
+              Simulate Raw Model Inputs (mm)
             </div>
 
             {(['WRF', 'AI_MODEL', 'GFS', 'ENSEMBLE'] as ForecastModelId[]).map((mId) => {
@@ -205,17 +194,17 @@ export const BlendingMatrixView: React.FC<BlendingMatrixViewProps> = ({
               return (
                 <div key={mId} className="space-y-1">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="text-slate-300 font-medium">{m.name}</span>
-                    <span className="font-mono font-black text-white">{customRawRain[mId]} mm</span>
+                    <span className="text-slate-400">{m.name}</span>
+                    <span className="font-mono font-semibold text-white">{customRawRain[mId]} mm</span>
                   </div>
                   <input
                     type="range"
                     min="0"
-                    max="160"
+                    max="150"
                     step="2"
                     value={customRawRain[mId]}
                     onChange={(e) => handleSliderChange(mId, Number(e.target.value))}
-                    className="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer"
+                    className="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer"
                   />
                 </div>
               );
@@ -223,11 +212,11 @@ export const BlendingMatrixView: React.FC<BlendingMatrixViewProps> = ({
           </div>
         </div>
 
-        {/* Right: Live Dynamic Weights & Skill Matrix (6 Cols) */}
-        <div className="lg:col-span-6 space-y-3">
-          <div className="text-xs font-bold text-slate-200 uppercase tracking-wider flex items-center justify-between px-1">
-            <span>Dynamic Model Weight Breakdown</span>
-            <span className="text-xs font-mono text-sky-400">Sum = 100%</span>
+        {/* Right: Model Breakdown (6 Cols) */}
+        <div className="lg:col-span-6 space-y-2.5">
+          <div className="text-xs text-slate-400 uppercase flex items-center justify-between px-1">
+            <span>Model Weight Allocation</span>
+            <span className="font-mono text-slate-400">Total = 100%</span>
           </div>
 
           {liveCalc.models.map((m) => {
@@ -235,44 +224,41 @@ export const BlendingMatrixView: React.FC<BlendingMatrixViewProps> = ({
             return (
               <div
                 key={m.id}
-                className={`rounded-3xl p-5 border transition-all ${
+                className={`rounded-2xl p-4 transition-all ${
                   isHighest
-                    ? 'bg-[#0e1d3d]/95 border-sky-400/50 shadow-xl'
-                    : 'bg-[#0c1427]/95 border-white/10'
+                    ? 'mild-card border-slate-600 bg-slate-800/60'
+                    : 'mild-card'
                 }`}
               >
                 <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-3.5 h-3.5 rounded-full" style={{ backgroundColor: m.color }}></div>
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-3 h-3 rounded-full" style={{ backgroundColor: m.color }}></div>
                     <div>
                       <div className="flex items-center gap-2">
-                        <h4 className="text-sm font-bold text-white">{m.name}</h4>
+                        <h4 className="text-xs font-semibold text-white">{m.name}</h4>
                         {isHighest && (
-                          <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-300 font-bold border border-sky-400/30">
-                            LEAD WEIGHT
+                          <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-slate-800 text-sky-300 font-medium">
+                            PRIMARY
                           </span>
                         )}
                       </div>
-                      <div className="text-xs text-slate-400">{m.subCategory}</div>
+                      <div className="text-[11px] text-slate-400">{m.subCategory}</div>
                     </div>
                   </div>
 
-                  <div className="text-right">
-                    <span className="text-2xl font-black font-mono text-white">{m.weight}%</span>
-                  </div>
+                  <span className="text-lg font-bold font-mono text-white">{m.weight}%</span>
                 </div>
 
-                {/* Progress Bar */}
-                <div className="w-full bg-slate-800 rounded-full h-2.5 my-3 overflow-hidden">
+                <div className="w-full bg-slate-800 rounded-full h-1.5 my-2 overflow-hidden">
                   <div
                     className="h-full rounded-full transition-all duration-500"
                     style={{ width: `${m.weight}%`, backgroundColor: m.color }}
                   ></div>
                 </div>
 
-                <div className="flex items-center justify-between text-xs text-slate-300">
+                <div className="flex items-center justify-between text-[11px] text-slate-300">
                   <span>{m.description}</span>
-                  <span className="text-emerald-400 font-mono font-bold shrink-0 ml-3">
+                  <span className="text-emerald-400 font-mono font-medium shrink-0 ml-2">
                     Skill: {m.historicalSkillScore}%
                   </span>
                 </div>

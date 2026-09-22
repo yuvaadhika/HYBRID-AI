@@ -7,9 +7,7 @@ import {
   Wind,
   Zap,
   BellRing,
-  Clock,
-  CheckCircle2,
-  Radio
+  Clock
 } from 'lucide-react';
 import { ForecastSnapshot } from '../../types/weather';
 
@@ -23,128 +21,119 @@ export const HazardEarlyWarningView: React.FC<HazardEarlyWarningViewProps> = ({ 
   const getHazardIcon = (iconName: string) => {
     switch (iconName) {
       case 'CloudRain':
-        return <CloudRain className="w-6 h-6 text-sky-400" />;
+        return <CloudRain className="w-5 h-5 text-sky-400" />;
       case 'Flame':
-        return <Flame className="w-6 h-6 text-amber-400" />;
+        return <Flame className="w-5 h-5 text-amber-400" />;
       case 'Wind':
-        return <Wind className="w-6 h-6 text-purple-400" />;
+        return <Wind className="w-5 h-5 text-purple-400" />;
       case 'Zap':
-        return <Zap className="w-6 h-6 text-yellow-400" />;
+        return <Zap className="w-5 h-5 text-yellow-400" />;
       default:
-        return <AlertTriangle className="w-6 h-6 text-rose-400" />;
+        return <AlertTriangle className="w-5 h-5 text-rose-400" />;
     }
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-300">
+    <div className="space-y-5 animate-in fade-in duration-300">
       
       {/* Title */}
       <div>
-        <div className="flex items-center gap-2 text-xs font-mono font-bold text-rose-400 uppercase tracking-wider">
-          <ShieldAlert className="w-4 h-4" />
-          <span>MoES & NDMA Disaster Early Warning Protocol</span>
+        <div className="text-xs font-mono text-slate-400 uppercase">
+          Early Warning Protocol
         </div>
-        <h2 className="text-3xl font-black text-white font-['Outfit'] tracking-tight">
+        <h2 className="text-2xl font-bold text-white font-['Outfit']">
           Multi-Hazard Threat & Vulnerability Radar
         </h2>
         <p className="text-xs text-slate-400 mt-0.5">
-          Automated severe weather threshold monitoring for {location.name} station
+          Severe weather threshold monitoring for {location.name} station
         </p>
       </div>
 
-      {/* Main Alert Headline Banner */}
-      <div className="rounded-3xl p-6 bg-gradient-to-r from-rose-950/60 via-slate-900/90 to-[#0c1427]/95 border border-rose-500/50 shadow-2xl rose-glow space-y-3">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <div className="p-3 rounded-2xl bg-rose-500/20 text-rose-400">
-              <AlertTriangle className="w-8 h-8 animate-pulse" />
+      {/* Main Alert Banner */}
+      <div className="rounded-2xl p-5 mild-card space-y-2.5">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="flex items-center gap-2.5">
+            <div className="p-2 rounded-xl bg-slate-800 text-amber-400">
+              <AlertTriangle className="w-6 h-6" />
             </div>
             <div>
-              <div className="text-xs font-mono font-bold text-rose-300 uppercase">
-                Active Operational Weather Advisory
+              <div className="text-[10px] font-mono text-slate-400 uppercase">
+                Active Operational Advisory
               </div>
-              <h3 className="text-xl font-black text-white font-['Outfit']">
+              <h3 className="text-lg font-bold text-white font-['Outfit']">
                 {regime === 'EXTREME'
-                  ? 'Severe Cyclonic Wind & Precipitation Surge Alert'
+                  ? 'Severe Cyclonic Storm Alert'
                   : regime === 'HEAVY_RAIN'
-                  ? 'Intense Precipitation & Localized Waterlogging Watch'
+                  ? 'Intense Precipitation & Waterlogging Watch'
                   : regime === 'CONVECTIVE'
-                  ? 'Severe Convective Thunderstorm & Microburst Warning'
-                  : 'Normal Operational Weather Status'}
+                  ? 'Convective Thunderstorm Warning'
+                  : 'Normal Weather Operational Status'}
               </h3>
             </div>
           </div>
 
-          <span className="text-xs font-mono font-black px-3.5 py-1.5 rounded-xl bg-rose-500/30 text-rose-200 border border-rose-400/50">
-            ADVISORY LEVEL: {snapshot.riskLevel}
+          <span className="text-xs font-mono font-semibold px-2.5 py-1 rounded-lg bg-slate-800 text-slate-300 border border-slate-700">
+            Advisory: {snapshot.riskLevel}
           </span>
         </div>
 
-        <p className="text-xs text-slate-200 leading-relaxed max-w-4xl">
-          {snapshot.headlineSummary} Multi-model ensemble consensus indicates elevated localized hazards requiring civic operational readiness.
+        <p className="text-xs text-slate-300 leading-relaxed">
+          {snapshot.headlineSummary}
         </p>
       </div>
 
-      {/* Hazard Vulnerability Matrix Cards */}
+      {/* Hazard Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {extremeHazards.map((hazard) => (
           <div
             key={hazard.id}
-            className="rounded-3xl p-5 bg-[#0c1427]/95 border border-white/10 shadow-xl space-y-4 hover:border-sky-500/30 transition-all"
+            className="rounded-2xl p-4.5 mild-card space-y-3"
           >
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="p-3 rounded-2xl bg-slate-900 border border-white/5">
+              <div className="flex items-center gap-2.5">
+                <div className="p-2.5 rounded-xl bg-slate-900 border border-slate-800">
                   {getHazardIcon(hazard.iconName)}
                 </div>
                 <div>
-                  <h4 className="text-base font-bold text-white">{hazard.hazardName}</h4>
-                  <div className="text-xs font-mono text-slate-400">{hazard.currentMetric}</div>
+                  <h4 className="text-sm font-semibold text-white">{hazard.hazardName}</h4>
+                  <div className="text-[11px] font-mono text-slate-400">{hazard.currentMetric}</div>
                 </div>
               </div>
 
               <div className="text-right">
-                <div className="text-2xl font-black font-mono text-white">{hazard.riskPercentage}%</div>
-                <span
-                  className={`text-[9px] font-mono px-2 py-0.5 rounded font-black ${
-                    hazard.severityLevel === 'CRITICAL' || hazard.severityLevel === 'HIGH'
-                      ? 'bg-rose-500/20 text-rose-300'
-                      : hazard.severityLevel === 'MODERATE'
-                      ? 'bg-amber-500/20 text-amber-300'
-                      : 'bg-emerald-500/20 text-emerald-300'
-                  }`}
-                >
+                <div className="text-xl font-bold font-mono text-white">{hazard.riskPercentage}%</div>
+                <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-slate-800 text-slate-300">
                   {hazard.severityLevel}
                 </span>
               </div>
             </div>
 
-            {/* Gauge Bar */}
-            <div className="w-full bg-slate-900 rounded-full h-3 overflow-hidden p-0.5 border border-white/5">
+            {/* Gauge */}
+            <div className="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
               <div
                 className="h-full rounded-full transition-all duration-500"
                 style={{
                   width: `${hazard.riskPercentage}%`,
                   backgroundColor:
                     hazard.severityLevel === 'CRITICAL' || hazard.severityLevel === 'HIGH'
-                      ? '#f43f5e'
+                      ? '#f87171'
                       : hazard.severityLevel === 'MODERATE'
-                      ? '#f59e0b'
-                      : '#10b981'
+                      ? '#fbbf24'
+                      : '#34d399'
                 }}
               ></div>
             </div>
 
             {/* Impact & Action */}
-            <div className="space-y-2 pt-2 border-t border-white/5 text-xs">
-              <div className="text-slate-300">
-                <strong className="text-slate-400">Potential Impact: </strong>
+            <div className="space-y-1.5 pt-2 border-t border-slate-800 text-xs">
+              <div className="text-slate-300 text-[11px]">
+                <strong className="text-slate-400">Impact: </strong>
                 {hazard.impactDescription}
               </div>
-              <div className="p-3 rounded-xl bg-sky-500/10 border border-sky-400/20 text-sky-200 flex items-start gap-2">
-                <BellRing className="w-4 h-4 text-sky-400 shrink-0 mt-0.5" />
+              <div className="p-2 rounded-lg bg-slate-900/80 border border-slate-800 text-slate-300 text-[11px] flex items-start gap-1.5">
+                <BellRing className="w-3.5 h-3.5 text-sky-400 shrink-0 mt-0.5" />
                 <div>
-                  <strong className="text-sky-300">Actionable Protocol: </strong>
+                  <strong className="text-sky-300">Action: </strong>
                   {hazard.actionableAdvisory}
                 </div>
               </div>
@@ -153,38 +142,38 @@ export const HazardEarlyWarningView: React.FC<HazardEarlyWarningViewProps> = ({ 
         ))}
       </div>
 
-      {/* Early Warning Lead Time Timeline */}
-      <div className="rounded-3xl p-6 bg-[#0c1427]/95 border border-white/10 shadow-xl space-y-4">
+      {/* Protocol */}
+      <div className="rounded-2xl p-5 mild-card space-y-3">
         <div className="flex items-center gap-2">
-          <Clock className="w-5 h-5 text-sky-400" />
-          <h3 className="text-base font-bold text-white uppercase tracking-wider">
+          <Clock className="w-4 h-4 text-slate-400" />
+          <h3 className="text-xs font-semibold text-slate-200 uppercase tracking-wider">
             Operational Early Warning Multi-Stage Protocol
           </h3>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 text-center">
-          <div className="p-4 rounded-2xl bg-slate-900/80 border border-white/5 space-y-1">
-            <div className="text-xs font-mono font-bold text-slate-400">72 Hours Prior</div>
-            <div className="text-base font-black text-slate-200">Ensemble Watch</div>
-            <p className="text-[11px] text-slate-400">Global dispersion scan & synoptic track tracking</p>
+        <div className="grid grid-cols-1 sm:grid-cols-4 gap-2.5 text-center">
+          <div className="p-3 rounded-xl bg-slate-900/60 border border-slate-800 space-y-0.5">
+            <div className="text-xs font-mono font-medium text-slate-400">72h Out</div>
+            <div className="text-sm font-semibold text-slate-200">Ensemble Watch</div>
+            <p className="text-[10px] text-slate-400">Synoptic track tracking</p>
           </div>
 
-          <div className="p-4 rounded-2xl bg-slate-900/80 border border-white/5 space-y-1">
-            <div className="text-xs font-mono font-bold text-amber-400">48 Hours Prior</div>
-            <div className="text-base font-black text-amber-300">Consensus Alert</div>
-            <p className="text-[11px] text-slate-400">Multi-NWP model convergence verification</p>
+          <div className="p-3 rounded-xl bg-slate-900/60 border border-slate-800 space-y-0.5">
+            <div className="text-xs font-mono font-medium text-amber-300">48h Out</div>
+            <div className="text-sm font-semibold text-slate-200">Consensus Alert</div>
+            <p className="text-[10px] text-slate-400">Model convergence check</p>
           </div>
 
-          <div className="p-4 rounded-2xl bg-slate-900/80 border border-white/5 space-y-1">
-            <div className="text-xs font-mono font-bold text-rose-400">24 Hours Prior</div>
-            <div className="text-base font-black text-rose-300">Action Warning</div>
-            <p className="text-[11px] text-slate-400">WRF 3km high-res cloud microphysics targeting</p>
+          <div className="p-3 rounded-xl bg-slate-900/60 border border-slate-800 space-y-0.5">
+            <div className="text-xs font-mono font-medium text-rose-300">24h Out</div>
+            <div className="text-sm font-semibold text-slate-200">Action Warning</div>
+            <p className="text-[10px] text-slate-400">WRF microphysics targeting</p>
           </div>
 
-          <div className="p-4 rounded-2xl bg-sky-950/40 border border-sky-400/40 space-y-1">
-            <div className="text-xs font-mono font-bold text-sky-400">0–6 Hours (Nowcast)</div>
-            <div className="text-base font-black text-sky-300">AI Radar Rapid Blend</div>
-            <p className="text-[11px] text-sky-200/80">Real-time Doppler radar & lightning neural assimilation</p>
+          <div className="p-3 rounded-xl bg-slate-800/80 border border-slate-700 space-y-0.5">
+            <div className="text-xs font-mono font-medium text-sky-400">0–6h (Nowcast)</div>
+            <div className="text-sm font-semibold text-white">AI Radar Fusion</div>
+            <p className="text-[10px] text-slate-300">Doppler radar assimilation</p>
           </div>
         </div>
       </div>

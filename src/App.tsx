@@ -92,7 +92,7 @@ export function App() {
   }, [currentLocation.id, currentLeadTime, currentRegime, liveData]);
 
   return (
-    <div className="min-h-screen bg-[#030712] text-slate-100 flex flex-col antialiased selection:bg-sky-500/30 selection:text-sky-200">
+    <div className="min-h-screen bg-[#0c111d] text-slate-100 flex flex-col antialiased selection:bg-slate-700 selection:text-white">
       
       {/* Command Center Operational Header */}
       <CommandHeader
