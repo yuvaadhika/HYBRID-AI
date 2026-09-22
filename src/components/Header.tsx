@@ -2,11 +2,7 @@ import React, { useState } from 'react';
 import {
   MapPin,
   ChevronDown,
-  Layers,
-  Smartphone,
-  Monitor,
   Activity,
-  Zap,
   CloudRain,
   Sun,
   CloudLightning,
@@ -20,8 +16,6 @@ interface HeaderProps {
   onSelectLocation: (loc: LocationOption) => void;
   currentRegime: WeatherRegime;
   onSelectRegime: (regime: WeatherRegime) => void;
-  isMobileFrame: boolean;
-  onToggleFrame: () => void;
   lastUpdated: string;
 }
 
@@ -71,8 +65,6 @@ export const Header: React.FC<HeaderProps> = ({
   onSelectLocation,
   currentRegime,
   onSelectRegime,
-  isMobileFrame,
-  onToggleFrame,
   lastUpdated
 }) => {
   const [showLocationMenu, setShowLocationMenu] = useState(false);
@@ -81,11 +73,11 @@ export const Header: React.FC<HeaderProps> = ({
   const regimeInfo = REGIME_META[currentRegime];
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-[#080d1a]/90 backdrop-blur-xl border-b border-white/[0.08] px-4 py-2.5 transition-all">
+    <header className="sticky top-0 z-40 w-full bg-[#080d1a]/95 backdrop-blur-xl border-b border-white/[0.08] px-3.5 sm:px-4 py-2.5 transition-all">
       <div className="flex items-center justify-between gap-2">
         {/* Brand & Live Pulse */}
         <div className="flex items-center gap-2">
-          <div className="relative flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-sky-500/20 to-blue-600/30 border border-sky-400/40 shadow-[0_0_15px_rgba(56,189,248,0.25)]">
+          <div className="relative flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-sky-500/20 to-blue-600/30 border border-sky-400/40 shadow-[0_0_15px_rgba(56,189,248,0.25)] shrink-0">
             <Activity className="w-4 h-4 text-sky-400 animate-pulse" />
             <span className="absolute -top-0.5 -right-0.5 flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
@@ -172,7 +164,7 @@ export const Header: React.FC<HeaderProps> = ({
               className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-slate-700/80 border border-white/10 text-xs text-slate-200 transition-all font-medium"
             >
               <MapPin className="w-3.5 h-3.5 text-sky-400" />
-              <span className="truncate max-w-[85px] sm:max-w-[120px] font-medium">{currentLocation.name}</span>
+              <span className="truncate max-w-[90px] sm:max-w-[120px] font-medium">{currentLocation.name}</span>
               <ChevronDown className="w-3 h-3 opacity-60" />
             </button>
 
@@ -207,15 +199,6 @@ export const Header: React.FC<HeaderProps> = ({
               </div>
             )}
           </div>
-
-          {/* Viewport Frame Toggle (Mobile Frame vs Full Width) */}
-          <button
-            onClick={onToggleFrame}
-            className="hidden md:flex items-center justify-center w-8 h-8 rounded-lg bg-slate-800/60 hover:bg-slate-700/60 border border-white/10 text-slate-300 hover:text-sky-300 transition-all"
-            title={isMobileFrame ? 'Switch to Full Screen View' : 'Switch to Mobile Phone Frame'}
-          >
-            {isMobileFrame ? <Monitor className="w-3.5 h-3.5" /> : <Smartphone className="w-3.5 h-3.5" />}
-          </button>
         </div>
       </div>
     </header>

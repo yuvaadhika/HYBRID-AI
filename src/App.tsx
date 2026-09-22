@@ -16,7 +16,6 @@ export function App() {
   const [currentLocation, setCurrentLocation] = useState<LocationOption>(INDIAN_LOCATIONS[0]); // Chennai
   const [currentLeadTime, setCurrentLeadTime] = useState<LeadTime>('24h');
   const [currentRegime, setCurrentRegime] = useState<WeatherRegime>(INDIAN_LOCATIONS[0].defaultRegime);
-  const [isMobileFrame, setIsMobileFrame] = useState<boolean>(true);
   const [lastUpdated, setLastUpdated] = useState<string>(
     new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })
   );
@@ -43,20 +42,18 @@ export function App() {
   ).length;
 
   return (
-    <MobileFrame isMobileFrame={isMobileFrame}>
+    <MobileFrame>
       {/* Header */}
       <Header
         currentLocation={currentLocation}
         onSelectLocation={handleSelectLocation}
         currentRegime={currentRegime}
         onSelectRegime={handleSelectRegime}
-        isMobileFrame={isMobileFrame}
-        onToggleFrame={() => setIsMobileFrame(!isMobileFrame)}
         lastUpdated={lastUpdated}
       />
 
-      {/* Main Content Area */}
-      <main className="flex-1 overflow-y-auto px-4 py-3 space-y-4 pb-16">
+      {/* Main Content Area - Ergonomic for Android and Mobile Viewports */}
+      <main className="flex-1 w-full overflow-y-auto px-3.5 sm:px-4 py-3.5 space-y-4 pb-24">
         {activeTab === 'home' && (
           <HomeScreen snapshot={snapshot} onNavigate={setActiveTab} />
         )}
