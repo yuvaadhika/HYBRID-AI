@@ -7,57 +7,62 @@ import {
   AlertOctagon,
   Sparkles
 } from 'lucide-react';
+import { SupportedLanguage, getTranslation } from '../services/i18n';
 
 export type TabType = 'home' | 'forecast' | 'blend' | 'map' | 'alerts' | 'insights';
 
 interface BottomNavProps {
   activeTab: TabType;
   onSelectTab: (tab: TabType) => void;
+  currentLanguage?: SupportedLanguage;
   extremeRiskCount?: number;
 }
 
 export const BottomNav: React.FC<BottomNavProps> = ({
   activeTab,
   onSelectTab,
+  currentLanguage = 'en',
   extremeRiskCount = 1
 }) => {
+  const t = (key: string) => getTranslation(currentLanguage, key);
+
   const tabs: { id: TabType; label: string; icon: React.ReactNode; isHero?: boolean; badge?: number }[] = [
     {
       id: 'home',
-      label: 'Home',
+      label: t('home'),
       icon: <Home className="w-5 h-5" />
     },
     {
       id: 'forecast',
-      label: 'Forecast',
+      label: t('forecast'),
       icon: <CloudSun className="w-5 h-5" />
     },
     {
       id: 'blend',
-      label: 'AI Blend',
+      label: t('blend'),
       icon: <Sliders className="w-5 h-5" />,
       isHero: true
     },
     {
       id: 'map',
-      label: 'Skill Map',
+      label: t('map'),
       icon: <Map className="w-5 h-5" />
     },
     {
       id: 'alerts',
-      label: 'Alerts',
+      label: t('alerts'),
       icon: <AlertOctagon className="w-5 h-5" />,
       badge: extremeRiskCount
     },
     {
       id: 'insights',
-      label: 'Why AI?',
+      label: t('insights'),
       icon: <Sparkles className="w-5 h-5" />
     }
   ];
 
   return (
-    <nav className="sticky bottom-0 z-40 w-full bg-[#080d1a]/95 backdrop-blur-2xl border-t border-white/[0.08] px-2 py-1.5 transition-all">
+    <nav className="sticky bottom-0 z-40 w-full bg-[#0b1326]/95 backdrop-blur-2xl border-t border-sky-500/15 px-2 py-1.5 transition-all">
       <div className="flex items-center justify-around max-w-lg mx-auto">
         {tabs.map((tab) => {
           const isActive = activeTab === tab.id;
@@ -72,8 +77,8 @@ export const BottomNav: React.FC<BottomNavProps> = ({
                 <div
                   className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all duration-300 shadow-lg ${
                     isActive
-                      ? 'bg-gradient-to-tr from-sky-500 to-cyan-400 text-slate-950 shadow-sky-500/40 scale-105 ring-2 ring-sky-300/60'
-                      : 'bg-slate-800/90 text-sky-400 hover:bg-slate-700/90 border border-sky-500/30 hover:border-sky-400/60'
+                      ? 'bg-gradient-to-tr from-sky-500 to-cyan-400 text-slate-950 shadow-sky-500/30 scale-105 ring-2 ring-sky-300/60'
+                      : 'bg-[#131f38] text-sky-400 hover:bg-[#182847] border border-sky-500/30 hover:border-sky-400/60'
                   }`}
                 >
                   <Sliders className="w-5 h-5" />

@@ -1,4 +1,4 @@
-import { ForecastModelId, WeatherRegime, LeadTime } from '../types/weather';
+import { ForecastModelId, WeatherRegime } from '../types/weather';
 
 export interface LiveWeatherData {
   cityName: string;
@@ -60,7 +60,7 @@ export interface GeocodingResult {
   admin1?: string; // State
 }
 
-// Weather Code mapping to human readable condition
+// Weather Code mapping
 export function getWeatherDescription(code: number): { text: string; icon: string; regime: WeatherRegime } {
   if (code === 0) return { text: 'Clear Sky', icon: 'Sun', regime: 'NORMAL' };
   if (code === 1 || code === 2) return { text: 'Partly Cloudy', icon: 'CloudSun', regime: 'NORMAL' };
@@ -72,6 +72,32 @@ export function getWeatherDescription(code: number): { text: string; icon: strin
   if (code >= 80 && code <= 82) return { text: 'Intense Rain Showers', icon: 'CloudRain', regime: 'HEAVY_RAIN' };
   if (code >= 95 && code <= 99) return { text: 'Severe Thunderstorm & Lightning', icon: 'CloudLightning', regime: 'CONVECTIVE' };
   return { text: 'Active Weather System', icon: 'CloudRain', regime: 'MONSOON' };
+}
+
+/**
+ * Reverse Geocode GPS coordinates into precise user area / city name
+ */
+export async function reverseGeocodeLocation(lat: number, lon: number): Promise<{ name: string; state: string }> {
+  try {
+    const url = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`;
+    const res = await fetch(url);
+    if (res.ok) {
+      const data = await res.json();
+      const city = data.locality || data.city || data.principalSubdivision || 'My Location';
+      const state = data.principalSubdivision ? `${data.principalSubdivision}, ${data.countryName || 'India'}` : 'Live GPS';
+      return {
+        name: city,
+        state: state
+      };
+    }
+  } catch (err) {
+    console.warn('Reverse geocode fallback:', err);
+  }
+
+  return {
+    name: `Location (${lat.toFixed(2)}°N, ${lon.toFixed(2)}°E)`,
+    state: 'Live GPS Coordinates'
+  };
 }
 
 /**
@@ -98,7 +124,6 @@ export async function fetchLiveWeather(
   const weatherCode = current.weather_code ?? 0;
   const weatherMeta = getWeatherDescription(weatherCode);
 
-  // Auto-detect regime based on real-time observations
   let detectedRegime: WeatherRegime = weatherMeta.regime;
   const currentRain = current.precipitation ?? 0;
   const currentTemp = current.temperature_2m ?? 28;
@@ -116,15 +141,9 @@ export async function fetchLiveWeather(
     detectedRegime = 'MONSOON';
   }
 
-  // Calculate realistic model dispersion anchored on the live ground-truth data
-  // 1. GFS Global (Synoptic 13km scale)
-  // 2. WRF Mesoscale (High-Res 3km)
-  // 3. AI Neural Blend (XGBoost + LSTM)
-  // 4. Multi-Ensemble (GEFS 31-member)
   const baseRain24h = hourly.precipitation ? hourly.precipitation.slice(0, 24).reduce((a: number, b: number) => a + b, 0) : currentRain * 6;
   const actual24hRain = Math.max(currentRain * 4, Number(baseRain24h.toFixed(1)));
 
-  // Model physical offsets relative to live true atmospheric baseline
   const wrfRain = Number(Math.max(0, actual24hRain * (detectedRegime === 'HEAVY_RAIN' ? 1.15 : 1.08) + (actual24hRain === 0 ? 0.4 : 0)).toFixed(1));
   const aiRain = Number(Math.max(0, actual24hRain * 0.98 + (actual24hRain === 0 ? 0.2 : 0)).toFixed(1));
   const gfsRain = Number(Math.max(0, actual24hRain * 0.85 + (actual24hRain === 0 ? 0.0 : 0)).toFixed(1));
@@ -215,7 +234,7 @@ export async function fetchLiveWeather(
 }
 
 /**
- * Search any city in India or globally via Open-Meteo Geocoding
+ * Search any city in India or globally
  */
 export async function searchCities(query: string): Promise<GeocodingResult[]> {
   if (!query || query.trim().length < 2) return [];
